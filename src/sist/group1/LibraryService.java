@@ -128,4 +128,103 @@ public class LibraryService {
 			throw new ExistUserException("잘못된 비밀번호 입니다. 다시 입력해주세요.");
 		}
 	}
+	
+	public void searchForBooks(Scanner sc) {
+
+		boolean run = true;
+
+		while (run) {
+
+			System.out.println("도서검색");
+
+			System.out.println("1.등록번호 검색   2.도서명 검색   3.출판사 검색   4.저자 검색   0.나가기");
+			System.out.print("선택>");
+
+			int selectNum = sc.nextInt();
+			sc.nextLine();
+			
+			switch (selectNum) {
+			case 1:
+				System.out.println("검색할 도서를 입력해주세요");
+				System.out.println("등록번호>");
+				String key1 = sc.nextLine();
+				this.dao.searchForBooks("등록번호", key1);
+				break;
+			case 2:
+				System.out.println("검색할 도서를 입력해주세요");
+				System.out.println("도서명>");
+				String key2 = sc.nextLine();
+				this.dao.searchForBooks("도서명", key2);
+				break;
+			case 3:
+				System.out.println("검색할 도서를 입력해주세요");
+				System.out.println("출판사>");
+				String key3 = sc.nextLine();
+				this.dao.searchForBooks("출판사", key3);
+				break;
+			case 4:
+				System.out.println("검색할 도서를 입력해주세요");
+				System.out.println("저자>");
+				String key4 = sc.nextLine();
+				this.dao.searchForBooks("저자", key4);
+				break;
+			case 0:
+				run = false;
+				break;
+
+			}
+
+		}
+
+	}
+
+	public void viewCheckedOutBooks(Scanner sc) {
+
+		this.dao.viewCheckedOutBooks();
+
+	}
+
+	public void serachForUsers(Scanner sc) {
+
+		boolean run = true;
+
+		while (run) {
+
+			System.out.println("회원검색");
+
+			System.out.println("1.회원번호 검색   2.이름 검색   3.아이디 검색   4.전화번호 검색   0.나가기");
+			System.out.print("선택>");
+
+			int selectNum = sc.nextInt();
+			sc.nextLine();
+
+			switch (selectNum) {
+			case 1:
+				System.out.println("회원번호>");
+				String key1 = sc.nextLine();
+				this.dao.searchForBooks("회원번호", key1);
+				break;
+			case 2:
+				System.out.println("이름>");
+				String key2 = sc.nextLine();
+				this.dao.searchForBooks("이름", key2);
+				break;
+			case 3:
+				System.out.println("아이디>");
+				String key3 = sc.nextLine();
+				this.dao.searchForBooks("아이디", key3);
+				break;
+			case 4:
+				System.out.println("전화번호>");
+				String key4 = sc.nextLine();
+				this.dao.searchForBooks("전화번호", key4);
+				break;
+			case 0:
+				run = false;
+				break;
+
+			}
+
+		}
+	}
 }

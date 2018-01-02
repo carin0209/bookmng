@@ -1,7 +1,10 @@
 package sist.group1;
 
 import java.util.*;
+
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class LibraryDAO {
 
@@ -33,6 +36,10 @@ public class LibraryDAO {
 	private static final String BOOK_FILE = "D:\\books.data";
 	private static final String CHECKOUT_FILE = "D:\\checkOuts.data";
 
+	private LocalDate now = LocalDate.now();
+	private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private String nowDate = this.now.format(dateFormat);
+	
 	@SuppressWarnings("unchecked")
 	public LibraryDAO() {
 		File file = new File(USER_FILE);
@@ -202,4 +209,235 @@ public class LibraryDAO {
 			}
 		}
 	}
+	
+	public String searchForBooks(String word, String key) {
+
+		StringBuilder sb = new StringBuilder();
+		
+		Scanner sc = new Scanner(System.in);
+		
+
+		sb.append(String.format("[%s]에 해당하는 도서목록 입니다.%n", key));
+		sb.append(String.format("--------------------------------------------%%n"));
+		sb.append(String.format("등록번호   도서명     저자    출판사    대출현황%n"));
+		sb.append(String.format("--------------------------------------------%%n"));
+		
+
+		Book s = this.books.get(key);
+		
+		
+		if (word.equals("등록번호") && s.getBookNo().contains(key)) {
+			sb.append(String.format("%s%s%s%s%d%n", s.getBookNo(), s.getBookTitle(), s.getPublisher(), s.getAuthor(),
+					s.getBookStatus()));
+			
+		} else if (word.equals("책제목") && s.getBookTitle().contains(key)) {
+			sb.append(String.format("%s%s%s%s%d%n", s.getBookNo(), s.getBookTitle(), s.getPublisher(), s.getAuthor(),
+					s.getBookStatus()));
+			
+			
+		} else if (word.equals("출판사") && s.getAuthor().contains(key)) {
+			sb.append(String.format("%s%s%s%s%d%n", s.getBookNo(), s.getBookTitle(), s.getPublisher(), s.getAuthor(),
+					s.getBookStatus()));
+			
+		} else if (word.equals("저자") && s.getPublisher().contains(key)) {
+			sb.append(String.format("%s%s%s%s%d%n", s.getBookNo(), s.getBookTitle(), s.getPublisher(), s.getAuthor(),
+					s.getBookStatus()));
+			
+		} else {
+		
+		System.out.println("잘못된 번호/이름/아이디/전화번호 입니다. 다시 입력해 주세요.");
+		
+		}
+		
+
+		sb.append(String.format("------------------------------------------%n"));
+
+		boolean run = false;
+
+		while (run) {
+
+			System.out.println("1.도서 상세 보기  0.나가기");
+
+			System.out.println("선택");
+
+			int selectNo = sc.nextInt();
+			sc.nextLine();
+
+			switch (selectNo) {
+
+			case 1:
+				this.viewBookInDetail(sc);
+
+				break;
+			case 0:
+				run = false;
+
+			}
+
+		}
+
+		return sb.toString();
+
+	}
+	
+	private void viewBookInDetail(Scanner sc) {
+
+		// 선호거
+
+	}
+	
+	// 대출중인 책을 다 가지고 와서 리스트로 뿌려준다.
+		// 1. 상태가 1,2 인거 다지고오기
+		public String viewCheckedOutBooks() {
+
+			StringBuilder sb = new StringBuilder();
+
+			int a = 0;
+
+			// 퍼센트 계산용 books 사이즈 변수
+			double b = this.books.size();
+			
+			// 오늘날짜 출력
+			sb.append(String.format("오늘 날짜 : %s%n", this.nowDate));
+			sb.append(String.format("-------------------------------------------------------------------------------------------------%n"));
+			sb.append(String.format("등록번호    도서명        저자     출판사       대출일       반납예정일        대출인     회원번호%n"));
+
+
+			for (CheckOut checkout : checkOuts) {
+				
+				Book book = this.books.get(checkout.getcBookNo());
+				
+				if(book.getBookStatus() == 1 && book.getBookStatus() == 2) {
+					String bookNo = book.getBookNo();
+					String bookTitle = book.getBookTitle();
+					String author = book.getAuthor();
+					String publisher = book.getPublisher();
+					
+					if(checkout.getcBookNo().equals(bookNo)) {
+						String checkOutDate = checkout.getCheckOutDate();
+						String dueDate = checkout.getDueDate();
+						String cUserNo = checkout.getcUserNo();
+						
+						User user = this.users.get(cUserNo);
+						
+						String userNo = user.getUserNo();
+						String name = user.getName();
+						
+						sb.append(String.format("%s%s%s%s%s%s%s%s%n",bookNo,bookTitle,author,publisher,checkOutDate,dueDate,name,userNo));
+					}
+					
+					
+				} else {
+					
+					sb.append(String.format("대출중인 책이 존재하지 않습니다.%n"));
+				}
+			}
+
+			double c = (a / b) * 100.0;
+
+			sb.insert(0, String.format("도서관내 ['%d%'] 책이 대출중 입니다.%n", (int) c));
+
+			return sb.toString();
+
+		}
+		
+		public String serachForUsers(String word,String key) {
+			
+			StringBuilder sb = new StringBuilder();
+			
+			Scanner sc = new Scanner(System.in);
+
+			sb.append(String.format("[%s]에 해당하는 회원입니다.%n", key));
+			sb.append(String.format("--------------------------------------------%%n"));
+			sb.append(String.format("회원번호  아이디   이름   전화번호 %n"));
+			sb.append(String.format("--------------------------------------------%%n"));
+
+			int a = 0;
+
+			User s = this.users.get(key);
+
+			//User toString 수정해야함
+			if (word.equals("회원번호") && s.getUserNo().contains(key)) {
+				sb.append(String.format("%s%n",s.toString()));
+				
+			} else if (word.equals("이름") && s.getName().contains(key)) {
+				sb.append(String.format("%s%n",s.toString()));
+				
+
+			} else if (word.equals("아이디") && s.getUserId().contains(key)) {
+				sb.append(String.format("%s%n",s.toString()));
+				
+			} else if (word.equals("전화번호") && s.getphone().contains(key)) {
+				sb.append(String.format("%s%n",s.toString()));
+				
+			} else {
+				sb.append(String.format("잘못된 번호/이름/아이디/전화번호 입니다. 다시 입력해 주세요.%n"));
+			}
+
+			sb.append(String.format("------------------------------------------%n"));
+			
+			boolean run = false;
+
+			while (run) {
+
+				System.out.println("1.회원 상세 보기  0.나가기");
+
+				System.out.println("선택>");
+
+				int selectNo = sc.nextInt();
+				sc.nextLine();
+
+				switch (selectNo) {
+
+				case 1:
+					this.viewUserInDetail(sc);
+
+					break;
+				case 0:
+					run = false;
+
+				}
+
+			}
+
+
+			return sb.toString();
+		}
+		
+		private String viewUserInDetail(Scanner sc) {
+			
+			StringBuilder sb = new StringBuilder();
+			
+			
+			System.out.println("상세보기 할 회원 번호를 입력해 주세요");
+			System.out.println("회원 번호 입력");
+			
+			String userNo = sc.next();
+			sc.nextLine();
+			
+			sb.append(String.format("[회원번호/이름/아이디/이메일/연락처]%n"));
+			sb.append(String.format("%s%n",this.users.get(userNo)));
+			
+			sb.append(String.format("오늘 날짜 : %s%n", this.nowDate));
+			
+			sb.append(String.format("--------------------------------------------%%n"));
+			sb.append(String.format("회차  도서명    대출일   반납일   반납예정일    연체일수%n"));
+			sb.append(String.format("--------------------------------------------%%n"));
+			
+			for(CheckOut checkout : checkOuts) {
+				
+				Book book = this.books.get(checkout.getcBookNo());
+				
+				sb.append(String.format(
+						"%s%s%s%s%s%s%n", checkout.getcBookNo(),book.getBookTitle(),
+						checkout.getCheckOutDate(),checkout.getReturnDate(),checkout.getDueDate(),checkout.getOverdueDays() ));
+				
+			}
+			
+			
+			
+
+			return sb.toString();
+
+		}
 }
