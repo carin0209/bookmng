@@ -129,53 +129,50 @@ public class LibraryService {
 		}
 	}
 	
-	public void searchForBooks(Scanner sc) {
-
+public void searchForBooks(Scanner sc) throws SearchForBooksException {
+		
+		try {
 		boolean run = true;
-
+		
 		while (run) {
-
 			System.out.println("도서검색");
-
 			System.out.println("1.등록번호 검색   2.도서명 검색   3.출판사 검색   4.저자 검색   0.나가기");
 			System.out.print("선택>");
 
 			int selectNum = sc.nextInt();
 			sc.nextLine();
+			System.out.println("검색할 도서를 입력해주세요");
+			String key = null;
 			
 			switch (selectNum) {
 			case 1:
-				System.out.println("검색할 도서를 입력해주세요");
-				System.out.println("등록번호>");
-				String key1 = sc.nextLine();
-				this.dao.searchForBooks("등록번호", key1);
+				System.out.print("등록번호>");
+				key = sc.next();
+				this.dao.searchForBooks("등록번호", key);
 				break;
 			case 2:
-				System.out.println("검색할 도서를 입력해주세요");
-				System.out.println("도서명>");
-				String key2 = sc.nextLine();
-				this.dao.searchForBooks("도서명", key2);
+				System.out.print("도서명>");
+				key = sc.next();
+				this.dao.searchForBooks("도서명", key);
 				break;
 			case 3:
-				System.out.println("검색할 도서를 입력해주세요");
-				System.out.println("출판사>");
-				String key3 = sc.nextLine();
-				this.dao.searchForBooks("출판사", key3);
+				System.out.print("출판사>");
+				key = sc.next();
+				this.dao.searchForBooks("출판사", key);
 				break;
 			case 4:
-				System.out.println("검색할 도서를 입력해주세요");
 				System.out.println("저자>");
-				String key4 = sc.nextLine();
-				this.dao.searchForBooks("저자", key4);
+				key = sc.next();
+				this.dao.searchForBooks("저자", key);
 				break;
-			case 0:
-				run = false;
-				break;
-
+			case 0 : run = false;break;
+			
 			}
-
 		}
-
+		
+		} catch(Exception e) {
+			throw new SearchForBooksException("등록되지 않은 책 입니다. 다시 입력해주세요.");
+		}
 	}
 
 	public void viewCheckedOutBooks(Scanner sc) {
@@ -184,47 +181,78 @@ public class LibraryService {
 
 	}
 
-	public void serachForUsers(Scanner sc) {
-
+public void serachForUsers(Scanner sc) throws SearchForUsersException {
+		
+		try {
+			
 		boolean run = true;
-
 		while (run) {
-
 			System.out.println("회원검색");
-
-			System.out.println("1.회원번호 검색   2.이름 검색   3.아이디 검색   4.전화번호 검색   0.나가기");
+			System.out.println("1.회원번호 검색 2.이름 검색 3.아이디 검색 4.전화번호 검색 0.나가기");
 			System.out.print("선택>");
 
 			int selectNum = sc.nextInt();
 			sc.nextLine();
-
+			System.out.println("검색 할 회원을 입력해주세요.");
+			String key = null;
+			
 			switch (selectNum) {
+			case 0:run = false;break;
 			case 1:
-				System.out.println("회원번호>");
-				String key1 = sc.nextLine();
-				this.dao.searchForBooks("회원번호", key1);
+				System.out.print("회원번호>");
+				key = sc.next();
+				System.out.println(this.dao.serachForUsers("회원번호", key));
 				break;
 			case 2:
-				System.out.println("이름>");
-				String key2 = sc.nextLine();
-				this.dao.searchForBooks("이름", key2);
+				System.out.print("이름>");
+				key = sc.next();
+				System.out.println(this.dao.serachForUsers("이름", key));
 				break;
 			case 3:
-				System.out.println("아이디>");
-				String key3 = sc.nextLine();
-				this.dao.searchForBooks("아이디", key3);
+				System.out.print("아이디>");
+				key = sc.next();
+				System.out.println(this.dao.serachForUsers("아이디", key));
 				break;
 			case 4:
-				System.out.println("전화번호>");
-				String key4 = sc.nextLine();
-				this.dao.searchForBooks("전화번호", key4);
+				System.out.print("전화번호>");
+				key = sc.next();
+				System.out.println(this.dao.serachForUsers("전화번호", key));
 				break;
-			case 0:
-				run = false;
-				break;
-
 			}
-
+		}
+		
+		} catch(Exception e) {
+			throw new SearchForUsersException ("잘못된 검색어 입니다. 다시 입력해 주세요.");
 		}
 	}
+
+public void viewUserInDetail(Scanner sc) throws ViewUserInDetailSubException {
+
+	boolean run = false;
+	while (run) {
+		System.out.println("1.회원 상세 보기  0.나가기");
+		System.out.println("선택>");
+		int selectNo = sc.nextInt();
+		sc.nextLine();
+		switch (selectNo) {
+		// 상세보기 호출
+		case 1:this.viewUserInDetailSub(sc);break;
+		case 0:run = false;break;
+		}
+	}
+	
+	
+}
+
+private void viewUserInDetailSub(Scanner sc) throws ViewUserInDetailSubException {
+	try {
+	System.out.println("상세보기 할 회원 번호를 입력해 주세요");
+	System.out.print("회원 번호 입력");
+	String userNo = sc.next();
+	sc.next();
+	System.out.println(this.dao.viewUserInDetail(userNo));
+	} catch (Exception e) {
+		throw new ViewUserInDetailSubException("잘못된 회원번호 입니다. 다시 입력해 주세요.");
+	}
+}
 }
