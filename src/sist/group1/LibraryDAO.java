@@ -230,7 +230,6 @@ public class LibraryDAO {
 		sb.append(String.format("등록번호   도서명     저자    출판사    대출현황%n"));
 		sb.append(String.format("--------------------------------------------%%n"));
 
-		Book s = this.books.get(key);
 
 		Set<String> set = this.books.keySet();
 		List<String> list = new ArrayList<String>(set);
@@ -243,13 +242,14 @@ public class LibraryDAO {
 			}
 		});
 
-		if (word.equals("등록번호") && s.getBookNo().contains(key)) {
+		if (word.equals("등록번호") && this.books.containsKey(key)) {
+			Book s = this.books.get(key);
 			sb.append(String.format("%-5s%-7s%-7s%-7s%-7d%n", s.getBookNo(), s.getBookTitle(), s.getPublisher(),
 					s.getAuthor(), s.getBookStatus()));
 			
 		} else if (word.equals("도서명")) {
 			for (String i : list) {
-				if (this.books.get(i).getBookTitle().contains(s.getBookTitle())) {
+				if (this.books.containsValue(key)) {
 					sb.append(String.format("%-5s%-7s%-7s%-7s%-7d%n", this.books.get(i).getBookNo(),
 							this.books.get(i).getBookTitle(), this.books.get(i).getPublisher(),
 							this.books.get(i).getAuthor(), this.books.get(i).getBookStatus()));
@@ -258,7 +258,7 @@ public class LibraryDAO {
 
 		} else if (word.equals("출판사")) {
 			for (String i : list) {
-				if (this.books.get(i).getPublisher().contains(s.getPublisher())) {
+				if (this.books.containsValue(key)) {
 					sb.append(String.format("%-5s%-7s%-7s%-7s%-7d%n", this.books.get(i).getBookNo(),
 							this.books.get(i).getBookTitle(), this.books.get(i).getPublisher(),
 							this.books.get(i).getAuthor(), this.books.get(i).getBookStatus()));
@@ -268,7 +268,7 @@ public class LibraryDAO {
 		
 		else if (word.equals("저자")) {
 			for (String i : list) {
-				if (this.books.get(i).getAuthor().contains(s.getAuthor())) {
+				if (this.books.containsValue(key)) {
 					sb.append(String.format("%-5s%-7s%-7s%-7s%-7d%n", this.books.get(i).getBookNo(),
 							this.books.get(i).getBookTitle(), this.books.get(i).getPublisher(),
 							this.books.get(i).getAuthor(), this.books.get(i).getBookStatus()));
@@ -339,7 +339,6 @@ public class LibraryDAO {
 			sb.append(String.format("회원번호  아이디   이름   전화번호 %n"));
 			sb.append(String.format("--------------------------------------------%%n"));
 
-			User s = this.users.get(key);
 
 			Set<String> set = this.users.keySet();
 			List<String> list = new ArrayList<String>(set);
@@ -353,18 +352,27 @@ public class LibraryDAO {
 			});
 
 			// User toString 수정해야함
-			if (word.equals("회원번호") && s.getUserNo().contains(key)) {
+			if (word.equals("회원번호") && this.users.containsKey(key)) {
+				User s = this.users.get(key);
 				sb.append(String.format("%s%n", s.toString()));
 			} else if (word.equals("이름")) {
 				for (String i : list) {
-					if (this.users.get(i).getName().contains(s.getName())) {
+					if (this.users.containsValue(key)) {
 						sb.append(String.format("%s%n", this.users.get(i).toString()));
 					}
 				}
-			} else if (word.equals("아이디") && s.getUserId().contains(key)) {
-				sb.append(String.format("%s%n", s.toString()));
-			} else if (word.equals("전화번호") && s.getphone().contains(key)) {
-				sb.append(String.format("%s%n", s.toString()));
+			} else if (word.equals("아이디")) {
+				for (String i : list) {
+					if( this.users.containsValue(key)) {
+				sb.append(String.format("%s%n",this.users.get(i).toString()));
+					}
+				}
+			} else if (word.equals("전화번호")) {
+				for (String i : list) {
+					if(this.users.containsValue(key)) {
+				sb.append(String.format("%s%n",this.users.get(i).toString()));
+					}
+				}
 			}
 
 			sb.append(String.format("------------------------------------------%n"));
